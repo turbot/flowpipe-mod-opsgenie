@@ -1,7 +1,7 @@
 mod "opsgenie" {
   title         = "Opsgenie"
   description   = "Run pipelines and triggers that interact with Opsgenie."
-  color         = "#191717"
+  color         = "#2684FF"
   documentation = file("./docs/index.md")
   icon          = "/images/flowpipe/mods/turbot/opsgenie.svg"
   categories    = ["opsgenie"]

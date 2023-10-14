@@ -16,13 +16,13 @@ pipeline "close_incident" {
   param "identifierType" {
     type        = string
     description = "Type of the identifier that is provided as an in-line parameter"
-    default = "id"
+    default     = "id"
   }
 
   param "note" {
-    type =  string
+    type        = string
     description = "Additional incident note to add."
-    optional = true
+    optional    = true
   }
 
   step "http" "close_incident" {
@@ -33,7 +33,7 @@ pipeline "close_incident" {
       Authorization = "GenieKey ${param.token}"
     }
     request_body = jsonencode({
-        for name, value in param : name => value if value != null
+      for name, value in param : name => value if value != null
     })
   }
 

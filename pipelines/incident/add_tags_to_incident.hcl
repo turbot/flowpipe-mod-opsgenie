@@ -1,5 +1,5 @@
 pipeline "add_tags_to_incident" {
-  title       = "Add tags to Incident"
+  title       = "Add Tags to Incident"
   description = "Add tags to an incident."
 
   param "token" {
@@ -16,13 +16,13 @@ pipeline "add_tags_to_incident" {
   param "identifierType" {
     type        = string
     description = "Type of the identifier that is provided as an in-line parameter."
-    default = "id"
+    default     = "id"
   }
 
   param "note" {
-    type =  string
+    type        = string
     description = "Additional incident note to add."
-    optional = true
+    optional    = true
   }
 
   param "tags" {
@@ -38,7 +38,7 @@ pipeline "add_tags_to_incident" {
       Authorization = "GenieKey ${param.token}"
     }
     request_body = jsonencode({
-        for name, value in param : name => value if value != null
+      for name, value in param : name => value if value != null
     })
   }
 

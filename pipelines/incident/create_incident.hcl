@@ -16,7 +16,7 @@ pipeline "create_incident" {
   param "description" {
     type        = string
     description = "Description field of the incident."
-    optional = true
+    optional    = true
   }
 
   param "responders" {
@@ -24,19 +24,19 @@ pipeline "create_incident" {
       type = string
     }))
     description = "Teams/users that the incident is routed to via notifications."
-    optional = true
+    optional    = true
   }
 
   param "tags" {
     type        = list(string)
     description = "Tags of the incident."
-    optional = true
+    optional    = true
   }
 
   param "details" {
-    type = map(string)
+    type        = map(string)
     description = "Map of key-value pairs to use as custom properties of the incident."
-    optional = true
+    optional    = true
   }
 
   param "priority" {
@@ -48,13 +48,13 @@ pipeline "create_incident" {
   param "note" {
     type        = string
     description = "Additional note that is added while creating the incident."
-    optional = true
+    optional    = true
   }
 
   param "impactedServices" {
     type        = list(string)
     description = "Services on which the incident will be created."
-    optional = true
+    optional    = true
   }
 
   param "statusPageEntry" {
@@ -63,7 +63,7 @@ pipeline "create_incident" {
       detail = string
     })
     description = "Status page entry fields."
-    optional = true
+    optional    = true
   }
 
   param "notifyStakeholders" {
@@ -81,7 +81,7 @@ pipeline "create_incident" {
       Authorization = "GenieKey ${param.token}"
     }
     request_body = jsonencode({
-        for name, value in param : name => value if value != null
+      for name, value in param : name => value if value != null
     })
   }
 
