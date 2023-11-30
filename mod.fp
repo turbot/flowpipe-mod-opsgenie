@@ -9,6 +9,6 @@ mod "opsgenie" {
   opengraph {
     title       = "Opsgenie"
     description = "Run pipelines and triggers that interact with Opsgenie."
-    image       = "/images/flowpipe/mods/turbot/pagerduty-social-graphic.png"
+    image       = "/images/flowpipe/mods/turbot/opsgenie-social-graphic.png"
   }
 }

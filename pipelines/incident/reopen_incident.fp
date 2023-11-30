@@ -1,11 +1,11 @@
-pipeline "close_incident" {
-  title       = "Close Incident"
-  description = "Close an incident."
+pipeline "reopen_incident" {
+  title       = "Reopen Incident"
+  description = "Reopen an incident."
 
-  param "token" {
+  param "incident_api_key" {
     type        = string
-    description = "Token to make an API call."
-    default     = var.token
+    description = "API key to make incident API call."
+    default     = var.incident_api_key
   }
 
   param "identifier" {
@@ -25,12 +25,12 @@ pipeline "close_incident" {
     optional    = true
   }
 
-  step "http" "close_incident" {
+  step "http" "reopen_incident" {
     method = "POST"
-    url    = "https://api.opsgenie.com/v1/incidents/${param.identifier}/close?identifierType=${param.identifierType}"
+    url    = "https://api.opsgenie.com/v1/incidents/${param.identifier}/reopen?identifierType=${param.identifierType}"
     request_headers = {
       Content-Type  = "application/json"
-      Authorization = "GenieKey ${param.token}"
+      Authorization = "GenieKey ${param.incident_api_key}"
     }
     request_body = jsonencode({
       for name, value in param : name => value if value != null
@@ -38,6 +38,6 @@ pipeline "close_incident" {
   }
 
   output "incident" {
-    value = jsondecode(step.http.close_incident.response_body)
+    value = step.http.reopen_incident.response_body
   }
 }

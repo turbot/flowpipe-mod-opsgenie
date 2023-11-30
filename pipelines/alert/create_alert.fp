@@ -2,10 +2,10 @@ pipeline "create_alert" {
   title       = "Create Incident"
   description = "Create an incident."
 
-  param "token" {
+  param "alert_api_key" {
     type        = string
-    description = "Token to make an API call."
-    default     = var.token
+    description = "Integration API key to make an alert API call for various integrations."
+    default     = var.alert_api_key
   }
 
   param "message" {
@@ -96,18 +96,19 @@ pipeline "create_alert" {
   }
 
   step "http" "create_alert" {
-    method = "POST"
+    method = "post"
     url    = "https://api.opsgenie.com/v2/alerts"
     request_headers = {
       Content-Type  = "application/json"
-      Authorization = "GenieKey ${param.token}"
+      Authorization = "GenieKey ${param.alert_api_key}"
     }
     request_body = jsonencode({
       for name, value in param : name => value if value != null
     })
   }
 
-  output "incident" {
-    value = jsondecode(step.http.create_alert.response_body)
+  output "alert" {
+    description = "The details about the created alert."
+    value       = step.http.create_alert.response_body
   }
 }

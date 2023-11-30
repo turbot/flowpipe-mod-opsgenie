@@ -2,10 +2,10 @@ pipeline "add_tags_to_incident" {
   title       = "Add Tags to Incident"
   description = "Add tags to an incident."
 
-  param "token" {
+  param "incident_api_key" {
     type        = string
-    description = "Token to make an API call."
-    default     = var.token
+    description = "API key to make incident API call."
+    default     = var.incident_api_key
   }
 
   param "identifier" {
@@ -27,15 +27,15 @@ pipeline "add_tags_to_incident" {
 
   param "tags" {
     type        = list(string)
-    description = "TList of tags to add into incident."
+    description = "The list of tags to add into incident."
   }
 
   step "http" "add_tags_to_incident" {
-    method = "POST"
+    method = "post"
     url    = "https://api.opsgenie.com/v1/incidents/${param.identifier}/tags?identifierType=${param.identifierType}"
     request_headers = {
       Content-Type  = "application/json"
-      Authorization = "GenieKey ${param.token}"
+      Authorization = "GenieKey ${param.incident_api_key}"
     }
     request_body = jsonencode({
       for name, value in param : name => value if value != null
@@ -43,6 +43,6 @@ pipeline "add_tags_to_incident" {
   }
 
   output "incident" {
-    value = jsondecode(step.http.add_tags_to_incident.response_body)
+    value = step.http.add_tags_to_incident.response_body
   }
 }
