@@ -1,6 +1,6 @@
 pipeline "create_alert" {
-  title       = "Create Incident"
-  description = "Create an incident."
+  title       = "Create Alert"
+  description = "Create an alert."
 
   param "alert_api_key" {
     type        = string
@@ -15,7 +15,7 @@ pipeline "create_alert" {
 
   param "alias" {
     type        = string
-    description = "Client-defined identifier of the alert, that is also the key element of Alert De-Duplication."
+    description = "Client-defined identifier of the alert, this is also the key element of Alert De-Duplication."
     optional    = true
   }
 
