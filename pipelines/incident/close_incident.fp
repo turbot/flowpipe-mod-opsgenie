@@ -2,6 +2,10 @@ pipeline "close_incident" {
   title       = "Close Incident"
   description = "Close an incident."
 
+  tags = {
+    type = "featured"
+  }
+  
   param "incident_api_key" {
     type        = string
     description = "API key to make incident API call."

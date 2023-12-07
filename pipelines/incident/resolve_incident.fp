@@ -2,6 +2,10 @@ pipeline "resolve_incident" {
   title       = "Resolve Incident"
   description = "Resolve an incident."
 
+  tags = {
+    type = "featured"
+  }
+
   param "incident_api_key" {
     type        = string
     description = "API key to make incident API call."

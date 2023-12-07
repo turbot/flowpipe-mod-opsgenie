@@ -2,6 +2,10 @@ pipeline "create_alert" {
   title       = "Create Alert"
   description = "Create an alert."
 
+  tags = {
+    type = "featured"
+  }
+
   param "alert_api_key" {
     type        = string
     description = "Integration API key to make an alert API call for various integrations."
