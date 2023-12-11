@@ -1,15 +1,15 @@
 pipeline "create_alert" {
   title       = "Create Alert"
-  description = "Create an alert."
+  description = "Creates an alert."
 
   tags = {
     type = "featured"
   }
 
-  param "alert_api_key" {
+  param "cred" {
     type        = string
-    description = "Integration API key to make an alert API call for various integrations."
-    default     = var.alert_api_key
+    description = local.cred_param_description
+    default     = "default"
   }
 
   param "message" {
@@ -40,7 +40,7 @@ pipeline "create_alert" {
     optional    = true
   }
 
-  param "visibleTo" {
+  param "visible_to" {
     type = list(object({
       id       = string
       name     = string
@@ -84,7 +84,7 @@ pipeline "create_alert" {
   param "priority" {
     type        = string
     description = "Priority level of the alert."
-    default     = "P3"
+    optional    = true
   }
 
   param "user" {
@@ -102,17 +102,16 @@ pipeline "create_alert" {
   step "http" "create_alert" {
     method = "post"
     url    = "https://api.opsgenie.com/v2/alerts"
+
     request_headers = {
       Content-Type  = "application/json"
-      Authorization = "GenieKey ${param.alert_api_key}"
+      Authorization = "GenieKey ${credential.opsgenie[param.cred].alert_api_key}"
     }
-    request_body = jsonencode({
-      for name, value in param : name => value if value != null
-    })
+
+    request_body = jsonencode({ for name, value in param : local.create_alert_query_params[name] => value if contains(keys(local.create_alert_query_params), name) && value != null })
   }
 
-  output "alert" {
-    description = "The details about the created alert."
-    value       = step.http.create_alert.response_body
+  output "request" {
+    value = step.http.create_alert.response_body
   }
 }

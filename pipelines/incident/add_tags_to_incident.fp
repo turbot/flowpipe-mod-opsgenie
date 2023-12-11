@@ -1,11 +1,16 @@
 pipeline "add_tags_to_incident" {
   title       = "Add Tags to Incident"
-  description = "Add tags to an incident."
+  description = "Adds tags to an incident."
 
-  param "incident_api_key" {
+  param "cred" {
     type        = string
-    description = "API key to make incident API call."
-    default     = var.incident_api_key
+    description = local.cred_param_description
+    default     = "default"
+  }
+
+  param "tags" {
+    type        = list(string)
+    description = "The list of tags to add into incident."
   }
 
   param "identifier" {
@@ -13,7 +18,7 @@ pipeline "add_tags_to_incident" {
     description = "Identifier of the incident."
   }
 
-  param "identifierType" {
+  param "identifier_type" {
     type        = string
     description = "Type of the identifier that is provided as an in-line parameter."
     default     = "id"
@@ -25,24 +30,26 @@ pipeline "add_tags_to_incident" {
     optional    = true
   }
 
-  param "tags" {
-    type        = list(string)
-    description = "The list of tags to add into incident."
-  }
-
   step "http" "add_tags_to_incident" {
     method = "post"
-    url    = "https://api.opsgenie.com/v1/incidents/${param.identifier}/tags?identifierType=${param.identifierType}"
+    url    = "https://api.opsgenie.com/v1/incidents/${param.identifier}/tags?identifierType=${param.identifier_type}"
+
     request_headers = {
       Content-Type  = "application/json"
-      Authorization = "GenieKey ${param.incident_api_key}"
+      Authorization = "GenieKey ${credential.opsgenie[param.cred].incident_api_key}"
     }
-    request_body = jsonencode({
-      for name, value in param : name => value if value != null
-    })
+
+    request_body = jsonencode(merge(
+      {
+        tags = param.tags
+      },
+      param.note != null ? {
+        note = param.note
+      } : {}
+    ))
   }
 
-  output "incident" {
+  output "request" {
     value = step.http.add_tags_to_incident.response_body
   }
 }

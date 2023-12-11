@@ -1,15 +1,15 @@
 pipeline "resolve_incident" {
   title       = "Resolve Incident"
-  description = "Resolve an incident."
+  description = "Resolves an incident."
 
   tags = {
     type = "featured"
   }
 
-  param "incident_api_key" {
+  param "cred" {
     type        = string
-    description = "API key to make incident API call."
-    default     = var.incident_api_key
+    description = local.cred_param_description
+    default     = "default"
   }
 
   param "identifier" {
@@ -17,7 +17,7 @@ pipeline "resolve_incident" {
     description = "Identifier of the incident."
   }
 
-  param "identifierType" {
+  param "identifier_type" {
     type        = string
     description = "Type of the identifier that is provided as an in-line parameter"
     default     = "id"
@@ -31,17 +31,21 @@ pipeline "resolve_incident" {
 
   step "http" "resolve_incident" {
     method = "POST"
-    url    = "https://api.opsgenie.com/v1/incidents/${param.identifier}/resolve?identifierType=${param.identifierType}"
+    url    = "https://api.opsgenie.com/v1/incidents/${param.identifier}/resolve?identifierType=${param.identifier_type}"
+
     request_headers = {
       Content-Type  = "application/json"
-      Authorization = "GenieKey ${param.incident_api_key}"
+      Authorization = "GenieKey ${credential.opsgenie[param.cred].incident_api_key}"
     }
-    request_body = jsonencode({
-      for name, value in param : name => value if value != null
-    })
+
+    request_body = jsonencode(
+      param.note != null ? {
+        note = param.note
+      } : {}
+    )
   }
 
-  output "incident" {
+  output "request" {
     value = step.http.resolve_incident.response_body
   }
 }

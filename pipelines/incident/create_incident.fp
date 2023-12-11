@@ -1,15 +1,15 @@
 pipeline "create_incident" {
   title       = "Create Incident"
-  description = "Create an incident."
+  description = "Creates an incident."
 
   tags = {
     type = "featured"
   }
-  
-  param "incident_api_key" {
+
+  param "cred" {
     type        = string
-    description = "API key to make incident API call."
-    default     = var.incident_api_key
+    description = local.cred_param_description
+    default     = "default"
   }
 
   param "message" {
@@ -46,7 +46,7 @@ pipeline "create_incident" {
   param "priority" {
     type        = string
     description = "Priority level of the incident."
-    default     = "P3"
+    optional    = true
   }
 
   param "note" {
@@ -55,13 +55,13 @@ pipeline "create_incident" {
     optional    = true
   }
 
-  param "impactedServices" {
+  param "impacted_services" {
     type        = list(string)
     description = "Services on which the incident will be created."
     optional    = true
   }
 
-  param "statusPageEntry" {
+  param "status_page_entry" {
     type = object({
       title  = string
       detail = string
@@ -70,26 +70,27 @@ pipeline "create_incident" {
     optional    = true
   }
 
-  param "notifyStakeholders" {
+  param "notify_stakeholders" {
     type        = bool
     description = "Indicate whether stakeholders are notified or not."
-    default     = false
+    optional    = true
   }
 
 
   step "http" "create_incident" {
     method = "post"
     url    = "https://api.opsgenie.com/v1/incidents/create"
+
     request_headers = {
       Content-Type  = "application/json"
-      Authorization = "GenieKey ${param.incident_api_key}"
+      Authorization = "GenieKey ${credential.opsgenie[param.cred].incident_api_key}"
     }
-    request_body = jsonencode({
-      for name, value in param : name => value if value != null
-    })
+
+    request_body = jsonencode({ for name, value in param : local.create_incident_query_params[name] => value if contains(keys(local.create_incident_query_params), name) && value != null })
+
   }
 
-  output "incident" {
+  output "request" {
     value = step.http.create_incident.response_body
   }
 }
