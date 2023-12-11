@@ -23,23 +23,9 @@ pipeline "create_incident" {
     optional    = true
   }
 
-  param "responders" {
-    type = list(object({
-      type = string
-    }))
-    description = "Teams/users that the incident is routed to via notifications."
-    optional    = true
-  }
-
   param "tags" {
     type        = list(string)
     description = "Tags of the incident."
-    optional    = true
-  }
-
-  param "details" {
-    type        = map(string)
-    description = "Map of key-value pairs to use as custom properties of the incident."
     optional    = true
   }
 
@@ -52,21 +38,6 @@ pipeline "create_incident" {
   param "note" {
     type        = string
     description = "Additional note that is added while creating the incident."
-    optional    = true
-  }
-
-  param "impacted_services" {
-    type        = list(string)
-    description = "Services on which the incident will be created."
-    optional    = true
-  }
-
-  param "status_page_entry" {
-    type = object({
-      title  = string
-      detail = string
-    })
-    description = "Status page entry fields."
     optional    = true
   }
 
