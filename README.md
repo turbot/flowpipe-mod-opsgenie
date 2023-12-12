@@ -46,7 +46,6 @@ credential "opsgenie" "default" {
   alert_api_key    = "<your alert api key>"
   incident_api_key = "<your incident api key>"
 }
-
 ```
 
 For more information on credentials in Flowpipe, please see [Managing Credentials](https://flowpipe.io/docs/run/credentials).
@@ -78,6 +77,10 @@ flowpipe pipeline run create_alert --arg message='Alert from Flowpipe' --arg cre
 ```
 
 For more examples on how you can run pipelines, please see [Run Pipelines](https://flowpipe.io/docs/run/pipelines).
+
+### Configuration
+
+No additional configuration is required.
 
 ## Open Source & Contributing
 
