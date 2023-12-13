@@ -8,10 +8,6 @@ Opsgenie pipeline library for [Flowpipe](https://flowpipe.io), enabling seamless
 
 ## Getting Started
 
-### Requirements
-
-Docker daemon must be installed and running. Please see [Install Docker Engine](https://docs.docker.com/engine/install/) for more information.
-
 ### Installation
 
 Download and install Flowpipe (https://flowpipe.io/downloads). Or use Brew:
