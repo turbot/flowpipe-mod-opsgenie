@@ -3,13 +3,13 @@ pipeline "resolve_incident" {
   description = "Resolves an incident."
 
   tags = {
-    type = "featured"
+    recommended = "true"
   }
 
-  param "cred" {
-    type        = string
-    description = local.cred_param_description
-    default     = "default"
+  param "conn" {
+    type        = connection.opsgenie
+    description = local.conn_param_description
+    default     = connection.opsgenie.default
   }
 
   param "identifier" {
@@ -20,7 +20,6 @@ pipeline "resolve_incident" {
   param "identifier_type" {
     type        = string
     description = "Type of the identifier that is provided as an in-line parameter"
-    default     = "id"
   }
 
   param "note" {
@@ -35,7 +34,7 @@ pipeline "resolve_incident" {
 
     request_headers = {
       Content-Type  = "application/json"
-      Authorization = "GenieKey ${credential.opsgenie[param.cred].incident_api_key}"
+      Authorization = "GenieKey ${param.conn.incident_api_key}"
     }
 
     request_body = jsonencode(
