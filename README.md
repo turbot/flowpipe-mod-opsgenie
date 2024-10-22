@@ -17,27 +17,27 @@ brew tap turbot/tap
 brew install flowpipe
 ```
 
-### Credentials
+### Connections
 
 By default, the following environment variables will be used for authentication:
 
 - `OPSGENIE_ALERT_API_KEY`
 - `OPSGENIE_INCIDENT_API_KEY`
 
-You can also create `credential` resources in configuration files:
+You can also create `connection` resources in configuration files:
 
 ```sh
 vi ~/.flowpipe/config/opsgenie.fpc
 ```
 
 ```hcl
-credential "opsgenie" "default" {
+connection "opsgenie" "default" {
   alert_api_key    = "<your alert api key>"
   incident_api_key = "<your incident api key>"
 }
 ```
 
-For more information on credentials in Flowpipe, please see [Managing Credentials](https://flowpipe.io/docs/run/credentials).
+For more information on connections in Flowpipe, please see [Managing Connections](https://flowpipe.io/docs/run/connections).
 
 ### Usage
 
@@ -100,10 +100,10 @@ Run a pipeline:
 flowpipe pipeline run create_alert --arg message="Alert from Flowpipe"
 ```
 
-To use a specific `credential`, specify the `cred` pipeline argument:
+To use a specific `connection`, specify the `conn` pipeline argument:
 
 ```sh
-flowpipe pipeline run create_alert --arg message="Alert from Flowpipe" --arg cred=opsgenie_profile
+flowpipe pipeline run create_alert --arg message="Alert from Flowpipe" --arg conn=connection.opsgenie.opsgenie_profile
 ```
 
 ## Open Source & Contributing

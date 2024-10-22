@@ -3,13 +3,13 @@ pipeline "create_incident" {
   description = "Creates an incident."
 
   tags = {
-    type = "featured"
+    recommended = "true"
   }
 
-  param "cred" {
-    type        = string
-    description = local.cred_param_description
-    default     = "default"
+  param "conn" {
+    type        = connection.opsgenie
+    description = local.conn_param_description
+    default     = connection.opsgenie.default
   }
 
   param "message" {
@@ -54,7 +54,7 @@ pipeline "create_incident" {
 
     request_headers = {
       Content-Type  = "application/json"
-      Authorization = "GenieKey ${credential.opsgenie[param.cred].incident_api_key}"
+      Authorization = "GenieKey ${param.conn.incident_api_key}"
     }
 
     request_body = jsonencode({ for name, value in param : local.create_incident_query_params[name] => value if contains(keys(local.create_incident_query_params), name) && value != null })

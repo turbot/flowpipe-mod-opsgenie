@@ -3,13 +3,13 @@ pipeline "create_alert" {
   description = "Creates an alert."
 
   tags = {
-    type = "featured"
+    recommended = "true"
   }
 
-  param "cred" {
-    type        = string
-    description = local.cred_param_description
-    default     = "default"
+  param "conn" {
+    type        = connection.opsgenie
+    description = local.conn_param_description
+    default     = connection.opsgenie.default
   }
 
   param "message" {
@@ -59,7 +59,7 @@ pipeline "create_alert" {
 
     request_headers = {
       Content-Type  = "application/json"
-      Authorization = "GenieKey ${credential.opsgenie[param.cred].alert_api_key}"
+      Authorization = "GenieKey ${param.conn.alert_api_key}"
     }
 
     request_body = jsonencode({ for name, value in param : local.create_alert_query_params[name] => value if contains(keys(local.create_alert_query_params), name) && value != null })
